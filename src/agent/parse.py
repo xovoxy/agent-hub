@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from langchain_core.prompts import ChatPromptTemplate
-from src.utils import llm
+from src.utils import llm, reason_llm
 from langchain.agents import create_agent
 from langchain_tavily import TavilySearch
 from pydantic import BaseModel, Field
@@ -15,7 +15,7 @@ class NewsInfo(BaseModel):
 class ParseAgent:
     def __init__(self):
         self.agent = create_agent(
-            model=llm,
+            model=reason_llm,
             tools=[tavily_search],
             debug=True,
             response_format=NewsInfo,
@@ -56,8 +56,6 @@ Content Structure: Your report should naturally integrate the following aspects 
 The Core Event and Its Significance: State the essence of the event and why it is important.
 
 Deeper Context and Background: Explain the underlying reasons and historical context for the event (this is where the value of your web search should be evident).
-
-Report Accuracy and Perspective: Based on your verification, comment on the accuracy of the original article and point out any potential limitations in its perspective or crucial information it may have omitted.
 
 Potential Impact and Outlook: Analyze the likely short-term and long-term consequences of the event.
 
