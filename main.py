@@ -24,7 +24,10 @@ def parse_agent(request: ParseRequest) -> ParseResponse:
         return ParseResponse(output="Input is empty")
     
     result = ParseAgent().parse(request.input)
-    return ParseResponse(output={"title": result.title, "content": result.content})
+    if result is None:
+        return ParseResponse(output={"title": "", "content": "", "newstype": ""})
+    
+    return ParseResponse(output={"title": result.title, "content": result.content, "newstype": result.newstype})
 
 def main():
     uvicorn.run(app, host="0.0.0.0", port=8000)
