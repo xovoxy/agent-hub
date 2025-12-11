@@ -93,6 +93,10 @@ class ChatDeepSeekWithReasoning(ChatDeepSeek):
                 
                 assistant_idx += 1  # 移动到下一个 assistant 消息（只对 assistant 消息计数）
         
+        # 第四步：移除 tool_choice 参数（deepseek-reasoner 不支持此参数）
+        if "tool_choice" in payload:
+            payload.pop("tool_choice", None)
+        
         return payload
 
 
