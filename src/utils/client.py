@@ -3,11 +3,22 @@ from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import AIMessage
 from typing import Any
 import json
+import os
 
-llm = ChatDeepSeek(model="deepseek-chat", temperature=1.0)
+DEEPSEEK_MODEL = os.getenv(
+    "DEEPSEEK_MODEL",
+    os.getenv("DEEPSEEK_CHAT_MODEL", "deepseek-v4-flash"),
+)
+DEEPSEEK_THINKING_EFFORT = os.getenv("DEEPSEEK_THINKING_EFFORT", "max")
+
+llm = ChatDeepSeek(
+    model=DEEPSEEK_MODEL,
+    temperature=1.0,
+    extra_body={"thinking": {"type": "disabled"}},
+)
 
 class ChatDeepSeekWithReasoning(ChatDeepSeek):
-    """扩展 ChatDeepSeek 以支持 deepseek-reasoner 模型的 reasoning_content 字段"""
+    """扩展 ChatDeepSeek 以支持 DeepSeek 思考模式下的 reasoning_content 回传"""
     
     def _get_request_payload(
         self,
@@ -93,11 +104,11 @@ class ChatDeepSeekWithReasoning(ChatDeepSeek):
                 
                 assistant_idx += 1  # 移动到下一个 assistant 消息（只对 assistant 消息计数）
         
-        # 第四步：移除 tool_choice 参数（deepseek-reasoner 不支持此参数）
-        if "tool_choice" in payload:
-            payload.pop("tool_choice", None)
-        
         return payload
 
 
-reason_llm = ChatDeepSeekWithReasoning(model="deepseek-reasoner", temperature=1.0)
+reason_llm = ChatDeepSeekWithReasoning(
+    model=DEEPSEEK_MODEL,
+    reasoning_effort=DEEPSEEK_THINKING_EFFORT,
+    extra_body={"thinking": {"type": "enabled"}},
+)
