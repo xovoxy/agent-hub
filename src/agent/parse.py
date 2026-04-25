@@ -17,7 +17,7 @@ class ClassifyAgent:
         self.prompt_template = ChatPromptTemplate.from_messages(
             [
                 ("system", """
-你是一个专业的AI新闻分类专家。你的任务是根据新闻内容判断新闻类型。
+你是一个专业的AI新闻分类专家。你的任务是根据新闻内容判断新闻类型。如果新闻内容涉及政治等敏感话题则返回other。
 
 新闻类型定义：
 1. ai_news (AI资讯类): 关于AI行业动态、政策、公司新闻、市场趋势等资讯类内容

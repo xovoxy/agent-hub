@@ -1,5 +1,5 @@
 # 使用 Python 3.13 作为基础镜像
-FROM --platform=linux/amd64 python:3.13-slim
+FROM python:3.13-slim
 
 # 设置工作目录
 WORKDIR /app
